@@ -35,6 +35,8 @@ class MovieRecyclerAdapter : RecyclerView.Adapter<MovieRecyclerAdapter.ViewHolde
         holder.bind(movies[position], listener)
     }
 
+    fun getMovieByPosition(position: Int) = movies[position]
+
     fun notifyChanged(movies: List<Movie>) {
         this.movies.clear()
         this.movies.addAll(movies)
