@@ -1,6 +1,7 @@
 package br.com.murilomoro.data.remote
 
 import br.com.murilomoro.data.remote.dto.MovieDto
+import br.com.murilomoro.data.remote.interceptor.RxRemoteErrorInterceptor
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -24,7 +25,9 @@ interface MovieService {
         private const val API_KEY = "b5805265ed3b109f745c58879e79f31e"
         private const val BASE_URL = "https://api.themoviedb.org/3/"
 
-        fun createMovieService(): MovieService {
+        fun createMovieService(
+            rxRemoteErrorInterceptor: RxRemoteErrorInterceptor
+        ): MovieService {
             val client = OkHttpClient().newBuilder()
                 .addInterceptor {
                     val url = it.request().url().newBuilder()
@@ -37,6 +40,7 @@ interface MovieService {
 
                     it.proceed(request)
                 }
+                .addInterceptor(rxRemoteErrorInterceptor)
                 .addInterceptor(getHttpLoggingInterceptor())
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)

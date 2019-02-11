@@ -18,10 +18,6 @@ class MovieRepositoryImpl(
     override fun getPopularMovies(page: Int): Single<List<Movie>> {
         return service.getPopularMovies(page)
             .subscribeOn(Schedulers.io())
-            .onErrorResumeNext {
-                //If some error occur treat Exception here
-                Single.error(DefaultException())
-            }
             .map { it.results }
             .flattenAsObservable { it }
             .map {

@@ -1,6 +1,7 @@
 package br.com.murilomoro.mvvmcleanmodular
 
 import android.app.Application
+import br.com.murilomoro.mvvmcleanmodular.di.appModule
 import br.com.murilomoro.mvvmcleanmodular.di.dataModule
 import br.com.murilomoro.mvvmcleanmodular.di.domainModule
 import br.com.murilomoro.mvvmcleanmodular.di.presentationModule
@@ -14,6 +15,7 @@ class MovieApp : Application() {
         startKoin(
             this,
             listOf(
+                appModule,
                 dataModule,
                 domainModule,
                 presentationModule
