@@ -1,6 +1,7 @@
 package br.com.murilomoro.data.remote
 
 import br.com.murilomoro.data.remote.dto.MovieDto
+import br.com.murilomoro.data.remote.interceptor.RemoteRequestInterceptor
 import br.com.murilomoro.data.remote.interceptor.RxRemoteErrorInterceptor
 import io.reactivex.Single
 import okhttp3.OkHttpClient
@@ -22,24 +23,13 @@ interface MovieService {
     fun getMovieById(@Path("id") id: Long): Single<MovieDto.Response>
 
     companion object {
-        private const val API_KEY = "b5805265ed3b109f745c58879e79f31e"
-        private const val BASE_URL = "https://api.themoviedb.org/3/"
-
         fun createMovieService(
+            baseUrl: String,
+            requestInterceptor: RemoteRequestInterceptor,
             rxRemoteErrorInterceptor: RxRemoteErrorInterceptor
         ): MovieService {
             val client = OkHttpClient().newBuilder()
-                .addInterceptor {
-                    val url = it.request().url().newBuilder()
-                        .addQueryParameter("api_key", API_KEY)
-                        .build()
-
-                    val request = it.request().newBuilder()
-                        .url(url)
-                        .build()
-
-                    it.proceed(request)
-                }
+                .addInterceptor(requestInterceptor)
                 .addInterceptor(rxRemoteErrorInterceptor)
                 .addInterceptor(getHttpLoggingInterceptor())
                 .connectTimeout(60, TimeUnit.SECONDS)
@@ -50,7 +40,7 @@ interface MovieService {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
-                .baseUrl(BASE_URL)
+                .baseUrl(baseUrl)
                 .build()
                 .create(MovieService::class.java)
         }

@@ -12,11 +12,11 @@ import br.com.murilomoro.data.local.db.movie.MovieDao
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
-        fun createDatabase(application: Application): AppDatabase {
+        fun createDatabase(application: Application, databaseName: String): AppDatabase {
             return Room.databaseBuilder(
                 application,
                 AppDatabase::class.java,
-                application.getString(R.string.database_name)
+                databaseName
             ).allowMainThreadQueries().build()
         }
     }

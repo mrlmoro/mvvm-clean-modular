@@ -13,13 +13,14 @@ class MovieApp : Application() {
         super.onCreate()
 
         startKoin(
-            this,
-            listOf(
+            androidContext = this,
+            modules = listOf(
                 appModule,
                 dataModule,
                 domainModule,
                 presentationModule
-            )
+            ),
+            loadPropertiesFromFile = true
         )
     }
 }
